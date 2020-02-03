@@ -1,18 +1,46 @@
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x3f, 16, 2);
+
+byte backCar[] = {0x00, 0x00, 0x03, 0x06, 0x1C, 0x1F, 0x06, 0x00};
+byte frontCar[] = {0x00, 0x00, 0x10, 0x08, 0x07, 0x1F, 0x0C, 0x00};
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(A0, INPUT_PULLUP);
   Serial.begin(9600);
   pinMode(13, OUTPUT);
+  lcd.init();
+  lcd.backlight();
+  lcd.print("   Game console");
+  delay(3000);
+  lcd.clear();
+  lcd.createChar(0, backCar);
+  lcd.createChar(1, frontCar);
+}
+int carRow = 0;
+unsigned long timp = 0;
+void loop() {
+  if (millis() - timp >= 100) {
+    timp = millis();
+    int tasta = citesteTasta();
+    if (tasta == 2 && carRow != 0) {
+      lcd.setCursor(1, carRow);
+      lcd.print("  ");
+      carRow = 0;
+    }
+    if (tasta == 3 && carRow != 1) {
+      lcd.setCursor(1, carRow);
+      lcd.print("  ");
+      carRow = 1;
+    }
+  }
+  afisare();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  int tasta = citesteTasta();
-  if (tasta == 5)
-    digitalWrite(13, HIGH);
-  else
-    digitalWrite(13, LOW);
-  delay(100);
+void afisare() {
+  lcd.setCursor(1, carRow);
+  lcd.write((byte)0);
+  lcd.write((byte)1);
 }
 
 int citesteTasta() {
