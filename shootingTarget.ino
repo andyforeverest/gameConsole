@@ -80,6 +80,21 @@ void loop() {
     }
   }
   afisare();
+  if (gameOver == true) {
+    int tasta = citesteTasta();
+    if(tasta == 1){
+      gameOver = false;
+      trage = false;
+      target_rand = random(0, 2);
+      target_col = 15;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Game restarting");
+      delay(2000);
+      lcd.clear();
+      scor = 0;
+    }
+  }
 }
 
 void afisare() {
