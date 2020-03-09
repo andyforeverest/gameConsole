@@ -25,9 +25,10 @@ int obuz_col = 2;
 int obuz_rand;
 int target_rand, target_col = 15;
 int scor = 0;
+bool gameOver = false;
 
 void loop() {
-  if (millis() - timp >= 100) {
+  if ((millis() - timp >= 100) && (gameOver == false)) {
     timp = millis();
     int tasta = citesteTasta();
     if (tasta == 5 && trage == false) {
@@ -64,25 +65,42 @@ void loop() {
       target_rand = random(0, 2);// 0 sau 1
     }
     //daca am nimerit tinta
-    if((target_col - obuz_col == 1) && (target_rand == obuz_rand)){
-      target_col = 15;
-      target_rand = random(0, 2);// 0 sau 1
-      trage = false;
-      scor++;
+    if (((target_col - obuz_col == 1) || (target_col == obuz_col)) && (target_rand == obuz_rand)) {
+      if (trage == true)
+      { target_col = 15;
+        target_rand = random(0, 2);// 0 sau 1
+        trage = false;
+        scor++;
+      }
+    }
+
+    //daca tinta atinge tancul
+    if ((target_rand == tank_rand) && (target_col == 1)) {
+      gameOver = true;
     }
   }
   afisare();
 }
 
 void afisare() {
-  lcd.setCursor(1, tank_rand);
-  lcd.write((byte)0);//afisez tank
-  if (trage == true) {
-    lcd.setCursor(obuz_col, obuz_rand);
-    lcd.write((byte)1);
+  if (gameOver == false) {
+    lcd.setCursor(1, tank_rand);
+    lcd.write((byte)0);//afisez tank
+    if (trage == true) {
+      lcd.setCursor(obuz_col, obuz_rand);
+      lcd.write((byte)1);
+    }
+    lcd.setCursor(target_col, target_rand);
+    lcd.write((byte)2);//afisare target
   }
-  lcd.setCursor(target_col, target_rand);
-  lcd.write((byte)2);//afisare target
+  else
+  {
+    lcd.setCursor(0, 0);
+    lcd.print("Game over!     ");
+    lcd.setCursor(0, 1);
+    lcd.print("Your score: ");
+    lcd.print(scor);
+  }
 }
 
 int citesteTasta() {
