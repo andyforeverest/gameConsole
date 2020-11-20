@@ -7,6 +7,7 @@ byte frontCar[] = {0x00, 0x00, 0x10, 0x08, 0x07, 0x1F, 0x0C, 0x00};
 void setup() {
   // put your setup code here, to run once:
   pinMode(A0, INPUT_PULLUP);
+  pinMode(12, OUTPUT);
   Serial.begin(9600);
   pinMode(13, OUTPUT);
   lcd.init();
