@@ -20,10 +20,10 @@ void setup() {
 
 unsigned long timp = 0;
 bool trage = false;
-int tank_rand = 0;
+int tank_row = 0;
 int obuz_col = 2;
 int obuz_rand;
-int target_rand, target_col = 15;
+int target_row, target_col = 15;
 int scor = 0;
 bool gameOver = false;
 
@@ -34,20 +34,20 @@ void loop() {
     if (tasta == 5 && trage == false) {
       trage = true;
       obuz_col = 2;
-      obuz_rand = tank_rand;
+      obuz_rand = tank_row;
       Serial.println("fire");
     }
-    if (tasta == 2 && tank_rand == 1) //UP
+    if (tasta == 2 && tank_row == 1) //UP
     {
       lcd.setCursor(1, 1);
       lcd.print(" ");
-      tank_rand = 0;
+      tank_row = 0;
     }
-    if (tasta == 3 && tank_rand == 0) //DOWN
+    if (tasta == 3 && tank_row == 0) //DOWN
     {
       lcd.setCursor(1, 0);
       lcd.print(" ");
-      tank_rand = 1;
+      tank_row = 1;
     }
     if (trage == true) {
       lcd.setCursor(obuz_col, obuz_rand);
@@ -57,25 +57,25 @@ void loop() {
         trage = false;
     }
     //modificare pozitie target
-    lcd.setCursor(target_col, target_rand);
+    lcd.setCursor(target_col, target_row);
     lcd.print(" ");
     target_col--;
     if (target_col < 0) {
       target_col = 15;
-      target_rand = random(0, 2);// 0 sau 1
+      target_row = random(0, 2);// 0 sau 1
     }
     //daca am nimerit tinta
-    if (((target_col - obuz_col == 1) || (target_col == obuz_col)) && (target_rand == obuz_rand)) {
+    if (((target_col - obuz_col == 1) || (target_col == obuz_col)) && (target_row == obuz_rand)) {
       if (trage == true)
       { target_col = 15;
-        target_rand = random(0, 2);// 0 sau 1
+        target_row = random(0, 2);// 0 sau 1
         trage = false;
         scor++;
       }
     }
 
     //daca tinta atinge tancul
-    if ((target_rand == tank_rand) && (target_col == 1)) {
+    if ((target_row == tank_row) && (target_col == 1)) {
       gameOver = true;
     }
   }
@@ -85,7 +85,7 @@ void loop() {
     if(tasta == 1){
       gameOver = false;
       trage = false;
-      target_rand = random(0, 2);
+      target_row = random(0, 2);
       target_col = 15;
       lcd.clear();
       lcd.setCursor(0, 0);
@@ -99,13 +99,13 @@ void loop() {
 
 void afisare() {
   if (gameOver == false) {
-    lcd.setCursor(1, tank_rand);
+    lcd.setCursor(1, tank_row);
     lcd.write((byte)0);//afisez tank
     if (trage == true) {
       lcd.setCursor(obuz_col, obuz_rand);
       lcd.write((byte)1);
     }
-    lcd.setCursor(target_col, target_rand);
+    lcd.setCursor(target_col, target_row);
     lcd.write((byte)2);//afisare target
   }
   else
